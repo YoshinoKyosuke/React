@@ -1,3 +1,11 @@
+## 環境
+| ライブラリ | バージョン |
+| ---- | ---- |
+| react | 18.2.0 |
+| react-dom | 18.2.0 |
+| react-router-dom | 6.6.0 |
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
