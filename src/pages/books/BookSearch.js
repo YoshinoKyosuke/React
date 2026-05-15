@@ -6,6 +6,7 @@ import { Container, Fab, TextField,
 import { Link, useNavigate } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
+import { set } from 'date-fns';
 
 
 const BookSearch = ({books, setBooks}) => {
@@ -15,6 +16,30 @@ const BookSearch = ({books, setBooks}) => {
 
   const lastkeyword = useRef('')
 
+  //テキストボックスの状態を見る
+  const [ErrorType , setError] = useState("")
+
+  const TextFieldHandleChange = e =>{
+    const pattern =/['"`;\-#\/\*=]/;
+
+    if(pattern.test(e.target.value)){
+      setError("Hankaku")
+    }else{
+      setError("")
+    }
+  }
+
+  const TextFieldHandleBlur = e => {
+    if(!e.target.value){
+      setError("Kuhaku")
+    }
+  }
+
+  const SearchButtonClick = e =>{
+    if(!e.target.value){
+      setError("Kuhaku")
+    }
+  }
 
 
   const search = async (keyword, e) => {
@@ -53,6 +78,9 @@ setSearchResult(newList) // ステートを更新
 
   const addBook = card => {
     console.log(card)
+
+    
+
     const newId = books.length !== 0 ? books.slice(-1)[0].id + 1 : 1
     const newBook = {
       id: newId,
@@ -91,17 +119,26 @@ setSearchResult(newList) // ステートを更新
         <Box component="form" onSubmit={ e => search(keyword, e) }
         sx={{ mt: 1}}>
           <TextField
-            required
+            //required
             fullWidth
-            label="book search"
+            label="本のタイトルを入力"
             name="search"
             inputRef={keyword}
+            error={ErrorType !== ""
+            }
+            helperText={ErrorType === "Kuhaku" ? "本のタイトルは必須項目です。":
+              ErrorType === "Hankaku" ? "半角記号('\"`;-#/*=)は入力できません。":
+              ""}
+            onChange={TextFieldHandleChange}
+            onBlur={TextFieldHandleBlur}
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ my: 2 }}>
+            sx={{ my: 2 }}
+            //onClick={TextFieldHandleChange}
+            >
               検索する
             </Button>
         </Box>
