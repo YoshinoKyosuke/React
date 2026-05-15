@@ -4,6 +4,7 @@
 | react | 18.2.0 |
 | react-dom | 18.2.0 |
 | react-router-dom | 6.6.0 |
+| create-react-app | 5.0.1 |
 
 
 # Getting Started with Create React App
