@@ -33,13 +33,6 @@ const BookSearch = ({books, setBooks}) => {
     }
   }
 
-  const SearchButtonClick = e =>{
-    if(!e.target.value){
-      setError("ERROR_REQUIRED")
-    }
-  }
-
-
   const search = async (keyword, e) => {
     e.preventDefault()
     const baseUrl = 'https://www.googleapis.com/books/v1/volumes?'
@@ -116,7 +109,7 @@ setSearchResult(newList) // ステートを更新
         sx={{ mt: 1}}>
           <TextField
             fullWidth
-            label="本のタイトルを入力"
+            label="book search"
             name="search"
             inputRef={keyword}
             error={errorType !== ""
