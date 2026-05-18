@@ -17,27 +17,25 @@ const BookSearch = ({books, setBooks}) => {
   const lastkeyword = useRef('')
 
   //テキストボックスの状態を見る
-  const [ErrorType , setError] = useState("")
+  const [errorType , setError] = useState("")
 
-  const TextFieldHandleChange = e =>{
-    const pattern =/['"`;\-#\/\*=]/;
+  const handleTextFieldBlur = e => {
+     const pattern =/['"`;\-#\/\*=]/;
 
-    if(pattern.test(e.target.value)){
-      setError("Hankaku")
-    }else{
-      setError("")
+    if(!e.target.value.trim()){
+      setError("ERROR_REQUIRED")
     }
-  }
-
-  const TextFieldHandleBlur = e => {
-    if(!e.target.value){
-      setError("Kuhaku")
+    else if(pattern.test(e.target.value)){
+      setError("ERROR_INVALID_CHAR")
+    }
+    else{
+      setError("")
     }
   }
 
   const SearchButtonClick = e =>{
     if(!e.target.value){
-      setError("Kuhaku")
+      setError("ERROR_REQUIRED")
     }
   }
 
@@ -47,7 +45,6 @@ const BookSearch = ({books, setBooks}) => {
     const baseUrl = 'https://www.googleapis.com/books/v1/volumes?'
     const params = { q: `intitle:${keyword.current.value}`, maxResults:40 }
     const queryParams = new URLSearchParams(params) // JSでクエリパラメータ生成
-    // console.log(baseUrl + queryParams)
     
     if(lastkeyword.current === keyword.current.value)
       return
@@ -57,7 +54,6 @@ const BookSearch = ({books, setBooks}) => {
 
     const response = await fetch(baseUrl + queryParams)
       .then( response => response.json())
-    //console.log(response.items)
 
     const items = response.items || []
 
@@ -119,25 +115,22 @@ setSearchResult(newList) // ステートを更新
         <Box component="form" onSubmit={ e => search(keyword, e) }
         sx={{ mt: 1}}>
           <TextField
-            //required
             fullWidth
             label="本のタイトルを入力"
             name="search"
             inputRef={keyword}
-            error={ErrorType !== ""
+            error={errorType !== ""
             }
-            helperText={ErrorType === "Kuhaku" ? "本のタイトルは必須項目です。":
-              ErrorType === "Hankaku" ? "半角記号('\"`;-#/*=)は入力できません。":
+            helperText={errorType === "ERROR_REQUIRED" ? "本のタイトルは必須項目です。":
+              errorType === "ERROR_INVALID_CHAR" ? "半角記号('\"`;-#/*=)は入力できません。":
               ""}
-            onChange={TextFieldHandleChange}
-            onBlur={TextFieldHandleBlur}
+            onBlur={handleTextFieldBlur}
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
             sx={{ my: 2 }}
-            //onClick={TextFieldHandleChange}
             >
               検索する
             </Button>
