@@ -8,7 +8,6 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
 import { set } from 'date-fns';
 
-
 const BookSearch = ({books, setBooks}) => {
   const keyword = useRef('')  
   const [searchResult, setSearchResult] = useState([])
