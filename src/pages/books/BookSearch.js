@@ -68,7 +68,6 @@ setSearchResult(newList) // ステートを更新
     console.log(card)
 
     
-
     const newId = books.length !== 0 ? books.slice(-1)[0].id + 1 : 1
     const newBook = {
       id: newId,
