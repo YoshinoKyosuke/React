@@ -122,6 +122,7 @@ setSearchResult(newList) // ステートを更新
             fullWidth
             variant="contained"
             sx={{ my: 2 }}
+            disabled = {errorType !== ""}
             >
               検索する
             </Button>
