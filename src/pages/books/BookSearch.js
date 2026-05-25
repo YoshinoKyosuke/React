@@ -35,7 +35,7 @@ const BookSearch = ({books, setBooks}) => {
   const search = async (keyword, e) => {
     e.preventDefault()
     const baseUrl = 'https://www.googleapis.com/books/v1/volumes?'
-    const params = { q: `intitle:${keyword.current.value}`, maxResults:40 }
+    const params = { q: `intitle:${keyword.current.value}`, maxResults:40, key: 'AIzaSyAfiUwJrk8IbiMTljOItGwQ_uwvmam08gw',  }
     const queryParams = new URLSearchParams(params) // JSでクエリパラメータ生成
     
     if(lastkeyword.current === keyword.current.value)
