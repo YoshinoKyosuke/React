@@ -6,7 +6,7 @@ import { Container, Fab, TextField,
 import { Link, useNavigate } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
-
+import { set } from 'date-fns';
 
 const BookSearch = ({books, setBooks}) => {
   const keyword = useRef('')  
@@ -15,14 +15,28 @@ const BookSearch = ({books, setBooks}) => {
 
   const lastkeyword = useRef('')
 
+  //テキストボックスの状態を見る
+  const [errorType , setError] = useState("")
 
+  const handleTextFieldBlur = e => {
+     const pattern =/['"`;\-#\/\*=]/;
+
+    if(!e.target.value.trim()){
+      setError("ERROR_REQUIRED")
+    }
+    else if(pattern.test(e.target.value)){
+      setError("ERROR_INVALID_CHAR")
+    }
+    else{
+      setError("")
+    }
+  }
 
   const search = async (keyword, e) => {
     e.preventDefault()
     const baseUrl = 'https://www.googleapis.com/books/v1/volumes?'
     const params = { q: `intitle:${keyword.current.value}`, maxResults:40 }
     const queryParams = new URLSearchParams(params) // JSでクエリパラメータ生成
-    // console.log(baseUrl + queryParams)
     
     if(lastkeyword.current === keyword.current.value)
       return
@@ -32,7 +46,6 @@ const BookSearch = ({books, setBooks}) => {
 
     const response = await fetch(baseUrl + queryParams)
       .then( response => response.json())
-    //console.log(response.items)
 
     const items = response.items || []
 
@@ -53,6 +66,8 @@ setSearchResult(newList) // ステートを更新
 
   const addBook = card => {
     console.log(card)
+
+    
     const newId = books.length !== 0 ? books.slice(-1)[0].id + 1 : 1
     const newBook = {
       id: newId,
@@ -91,17 +106,24 @@ setSearchResult(newList) // ステートを更新
         <Box component="form" onSubmit={ e => search(keyword, e) }
         sx={{ mt: 1}}>
           <TextField
-            required
             fullWidth
             label="book search"
             name="search"
             inputRef={keyword}
+            error={errorType !== ""
+            }
+            helperText={errorType === "ERROR_REQUIRED" ? "本のタイトルは必須項目です。":
+              errorType === "ERROR_INVALID_CHAR" ? "半角記号('\"`;-#/*=)は入力できません。":
+              ""}
+            onBlur={handleTextFieldBlur}
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ my: 2 }}>
+            sx={{ my: 2 }}
+            disabled = {errorType !== ""}
+            >
               検索する
             </Button>
         </Box>
